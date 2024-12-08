@@ -16,31 +16,6 @@ spec:
     spec:
       containers:
         - name: nginx-app
-          image: localhost:5000/nginx-safle:1.0 
+          image: localhost:5000/nginx-safle:1.0
           ports:
             - containerPort: 80
-          volumeMounts:
-            - name: nginx-config
-              mountPath: /etc/nginx/nginx.conf
-              subPath: nginx.conf
-      volumes:
-        - name: nginx-config
-          configMap:
-            name: nginx-config-map
-
----
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: nginx-config-map
-data:
-  nginx.conf: |
-    server {
-      listen 80;
-      location /done {
-        return 200 "Successfully Done\n";
-      }
-      location /hii-safle {
-        return 200 "Hii Safle\n";
-      }
-    }
