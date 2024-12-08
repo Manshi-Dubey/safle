@@ -1,0 +1,45 @@
+pipeline {
+    agent any
+
+    environment {
+        IMAGE_NAME = 'nginx-safle'  
+        REGISTRY = 'localhost:3000'   
+        IMAGE_TAG = '1.0'     
+    }
+
+    stages {
+        stage('Checkout Code') {
+            steps {
+                git clone 'https://github.com/Manshi-Dubey/safle.gi'  
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                script {
+                   
+                    sh 'docker build -t $REGISTRY/$IMAGE_NAME:$IMAGE_TAG .'
+                }
+            }
+        }
+
+        stage('Push Docker Image') {
+            steps {
+                script {
+
+                    sh 'docker push $REGISTRY/$IMAGE_NAME:$IMAGE_TAG'
+                }
+            }
+        }
+
+        stage('Deploy to Kubernetes') {
+            steps {
+                script {
+                      sh  'kubectl apply -f deployment.yaml'
+                    }
+                }
+            }
+        }
+    }
+
+}
